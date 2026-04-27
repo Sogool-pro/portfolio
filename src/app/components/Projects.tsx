@@ -16,6 +16,9 @@ type Project = {
   images?: string[];
 };
 
+const projectAsset = (fileName: string) =>
+  `${import.meta.env.BASE_URL}projects/${fileName}`;
+
 const projects: Project[] = [
   {
     title: "FireGuard Project",
@@ -27,11 +30,11 @@ const projects: Project[] = [
     featured: true,
     category: "fullstack",
     year: "2024",
-    image: "/projects/fireguard-login.svg",
+    image: projectAsset("fireguard-login.svg"),
     images: [
-      "/projects/fireguard-login.svg",
-      "/projects/fireguard-dashboard.svg",
-      "/projects/fireguard-active.svg",
+      projectAsset("fireguard-login.svg"),
+      projectAsset("fireguard-dashboard.svg"),
+      projectAsset("fireguard-active.svg"),
     ],
   },
   {
@@ -44,10 +47,10 @@ const projects: Project[] = [
     featured: true,
     category: "fullstack",
     year: "2024",
-    image: "/projects/taskflow-landing.png",
+    image: projectAsset("taskflow-landing.png"),
     images: [
-      "/projects/taskflow-landing.png",
-      "/projects/taskflow-dashboard.svg",
+      projectAsset("taskflow-landing.png"),
+      projectAsset("taskflow-dashboard.svg"),
     ],
   },
   {
@@ -59,7 +62,7 @@ const projects: Project[] = [
     featured: false,
     category: "web",
     year: "2024",
-    image: "/projects/savouramen.png",
+    image: projectAsset("savouramen.png"),
   },
   {
     title: "Panabo City Park",
@@ -71,7 +74,7 @@ const projects: Project[] = [
     featured: false,
     category: "web",
     year: "2023",
-    image: "/projects/googlesites.png",
+    image: projectAsset("googlesites.png"),
   },
   {
     title: "BookFi",
@@ -82,7 +85,7 @@ const projects: Project[] = [
     featured: false,
     category: "fullstack",
     year: "2023",
-    image: "/projects/bookfi.png",
+    image: projectAsset("bookfi.png"),
   },
   {
     title: "Inventory Management System",
@@ -93,7 +96,7 @@ const projects: Project[] = [
     featured: false,
     category: "fullstack",
     year: "2024",
-    image: "/projects/inventory.png",
+    image: projectAsset("inventory.png"),
   },
 ];
 

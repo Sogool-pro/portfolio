@@ -94,7 +94,7 @@ export function Hero() {
                 />
               </button>
               <a
-                href="/resume.pdf"
+                href={`${import.meta.env.BASE_URL}resume.pdf`}
                 download
                 className="inline-flex items-center gap-2 px-6 py-3 rounded-md border border-[#c9c3b8] dark:border-[#41382d] hover:border-[#1a1710] dark:hover:border-[#f9f7f4] text-[#1a1710] dark:text-[#f9f7f4] text-sm transition-all hover:bg-[#f0ede7] dark:hover:bg-[#1d1a15]"
               >
@@ -154,7 +154,7 @@ export function Hero() {
               {/* Image */}
               <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-[#ddd8cf] dark:border-[#41382d] bg-[#f0ede7] dark:bg-[#1d1a15]">
                 <img
-                  src="/projects/photo.jpg"
+                  src={`${import.meta.env.BASE_URL}projects/photo.jpg`}
                   alt="Profile photo — swap with your own"
                   className="w-full h-full object-cover object-top"
                 />
