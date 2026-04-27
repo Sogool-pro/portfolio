@@ -218,9 +218,10 @@ export function PortfolioChatbot() {
         type="button"
         onClick={open ? () => setOpen(false) : openChat}
         aria-label={open ? "Close portfolio chat" : "Open portfolio chat"}
-        className="fixed bottom-6 right-4 z-[60] inline-flex h-14 w-14 items-center justify-center rounded-full bg-[#1a1710] dark:bg-[#f9f7f4] text-[#f9f7f4] dark:text-[#1a1710] shadow-xl shadow-[#1a1710]/20 hover:scale-105 transition-transform"
+        className="fixed bottom-6 right-4 z-[999] inline-flex h-14 items-center justify-center gap-2 rounded-full bg-[#1a1710] dark:bg-[#f9f7f4] px-5 text-sm text-[#f9f7f4] dark:text-[#1a1710] shadow-xl shadow-[#1a1710]/25 hover:scale-105 transition-transform"
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}
+        <span className="font-semibold">{open ? "Close" : "Ask about me"}</span>
       </button>
     </>
   );
