@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import { Bot, MessageCircle, Send, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 
@@ -94,6 +94,7 @@ function getBotReply(input: string) {
 export function PortfolioChatbot() {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
@@ -101,19 +102,56 @@ export function PortfolioChatbot() {
     },
   ]);
   const inputRef = useRef<HTMLInputElement>(null);
+  const typingTimerRef = useRef<number | null>(null);
 
   const latestMessages = useMemo(() => messages.slice(-8), [messages]);
 
+  useEffect(() => {
+    return () => {
+      if (typingTimerRef.current) {
+        window.clearTimeout(typingTimerRef.current);
+      }
+    };
+  }, []);
+
+  const typeBotReply = (reply: string) => {
+    if (typingTimerRef.current) {
+      window.clearTimeout(typingTimerRef.current);
+    }
+
+    setIsTyping(true);
+    setMessages((current) => [...current, { role: "assistant", text: "" }]);
+
+    let index = 0;
+    const step = () => {
+      index += 2;
+      const nextText = reply.slice(0, index);
+
+      setMessages((current) => {
+        const updated = [...current];
+        updated[updated.length - 1] = { role: "assistant", text: nextText };
+        return updated;
+      });
+
+      if (index < reply.length) {
+        typingTimerRef.current = window.setTimeout(step, 14);
+        return;
+      }
+
+      setIsTyping(false);
+      typingTimerRef.current = null;
+    };
+
+    typingTimerRef.current = window.setTimeout(step, 220);
+  };
+
   const ask = (question: string) => {
     const trimmed = question.trim();
-    if (!trimmed) return;
+    if (!trimmed || isTyping) return;
 
-    setMessages((current) => [
-      ...current,
-      { role: "user", text: trimmed },
-      { role: "assistant", text: getBotReply(trimmed) },
-    ]);
+    setMessages((current) => [...current, { role: "user", text: trimmed }]);
     setInput("");
+    typeBotReply(getBotReply(trimmed));
   };
 
   const handleSubmit = (event: FormEvent) => {
@@ -175,6 +213,19 @@ export function PortfolioChatbot() {
                     }`}
                   >
                     {message.text}
+                    {message.role === "assistant" && message.text === "" && (
+                      <span className="inline-flex items-center gap-1">
+                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#b5410d]" />
+                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#b5410d] [animation-delay:120ms]" />
+                        <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#b5410d] [animation-delay:240ms]" />
+                      </span>
+                    )}
+                    {message.role === "assistant" &&
+                      message.text !== "" &&
+                      isTyping &&
+                      index === latestMessages.length - 1 && (
+                        <span className="ml-0.5 inline-block h-4 w-1 translate-y-0.5 animate-pulse rounded-full bg-[#b5410d]" />
+                      )}
                   </p>
                 </div>
               ))}
@@ -187,6 +238,7 @@ export function PortfolioChatbot() {
                     key={question}
                     type="button"
                     onClick={() => ask(question)}
+                    disabled={isTyping}
                     className="rounded-full border border-[#ddd8cf] dark:border-[#302a21] px-2.5 py-1 text-[11px] text-[#6b6358] dark:text-[#b8afa2] hover:border-[#b5410d] hover:text-[#b5410d] transition-colors"
                   >
                     {question}
@@ -198,13 +250,15 @@ export function PortfolioChatbot() {
                   ref={inputRef}
                   value={input}
                   onChange={(event) => setInput(event.target.value)}
+                  disabled={isTyping}
                   placeholder="Ask about projects, skills..."
                   className="min-w-0 flex-1 rounded-lg border border-[#ddd8cf] dark:border-[#302a21] bg-[#f9f7f4] dark:bg-[#181611] px-3 py-2 text-sm text-[#1a1710] dark:text-[#f9f7f4] placeholder-[#9e9589] dark:placeholder-[#6f665c] focus:border-[#b5410d]/60 focus:outline-none focus:ring-1 focus:ring-[#b5410d]/20"
                 />
                 <button
                   type="submit"
                   aria-label="Send message"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#b5410d] text-white hover:bg-[#9f390b] transition-colors"
+                  disabled={isTyping}
+                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#b5410d] text-white hover:bg-[#9f390b] disabled:cursor-not-allowed disabled:opacity-60 transition-colors"
                 >
                   <Send size={16} />
                 </button>
