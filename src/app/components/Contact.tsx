@@ -3,6 +3,8 @@ import { useInView } from "motion/react";
 import { useRef, useState } from "react";
 import { Mail, Github, Linkedin, Send, CheckCircle } from "lucide-react";
 
+const contactEmail = "neljhan.p.redondo@gmail.com";
+
 export function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
@@ -11,6 +13,12 @@ export function Contact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const subject = encodeURIComponent(`Portfolio inquiry from ${form.name}`);
+    const body = encodeURIComponent(
+      `Name: ${form.name}\nEmail: ${form.email}\n\nMessage:\n${form.message}`,
+    );
+
+    window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`;
     setSent(true);
     setTimeout(() => setSent(false), 4000);
     setForm({ name: "", email: "", message: "" });
@@ -20,8 +28,8 @@ export function Contact() {
     {
       icon: Mail,
       label: "Email",
-      value: "neljhan.p.redondo@gmail.com",
-      href: "mailto:neljhan.p.redondo@gmail.com",
+      value: contactEmail,
+      href: `mailto:${contactEmail}`,
     },
     {
       icon: Github,
@@ -158,7 +166,7 @@ export function Contact() {
                 {sent ? (
                   <>
                     <CheckCircle size={16} />
-                    Message Sent!
+                    Opening Email App
                   </>
                 ) : (
                   <>
